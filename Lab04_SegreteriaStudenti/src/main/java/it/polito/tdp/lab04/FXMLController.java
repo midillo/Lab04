@@ -64,13 +64,16 @@ public class FXMLController {
     		String codice = model.getCodiceByNomecorso(btnCombo.getValue().toString());
     	
     		try {
+    			txtResult.setStyle("-fx-font-family: monospace");
+    			StringBuilder sb = new StringBuilder();
     			for(Studente s : this.model.getStudentiIscrittiAlCorso(codice)) {
-    				this.txtResult.appendText(s.getMatricola()+"\t\t\t");
-    				this.txtResult.appendText(s.getCognome()+"  ");
-    				this.txtResult.appendText(s.getNome()+"\t\t\t\t");
-    				this.txtResult.appendText(s.getCDS());
-    				this.txtResult.appendText("\n");
+    				sb.append(String.format("%-12d", s.getMatricola()));
+    				sb.append(String.format("%-50s", s.getCognome()));
+    				sb.append(String.format("%-50s", s.getNome()));
+    				sb.append(String.format("%-50s\n", s.getCDS()));
     			}
+    			txtResult.appendText(sb.toString());
+    			
     		}catch(NullPointerException npe) {
     			this.txtResult.setText("Nessuna matricola iscritta al corso!");
     	   		return;
