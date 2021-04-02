@@ -39,7 +39,9 @@ public class CorsoDAO {
 				Corso c = new Corso(codins, numeroCrediti, nome, periodoDidattico);
 				corsi.add(c);
 			}
-
+			
+			rs.close();
+			st.close();
 			conn.close();
 			return corsi;
 			

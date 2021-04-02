@@ -1,6 +1,8 @@
 package it.polito.tdp.lab04;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.lab04.model.Corso;
@@ -15,8 +17,9 @@ import javafx.scene.control.TextField;
 
 public class FXMLController {
 	
-	Model model;
-
+	private Model model;
+	private List<Corso> corsi;
+	
     @FXML
     private ResourceBundle resources;
 
@@ -24,7 +27,7 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private ComboBox<String> btnCombo;
+    private ComboBox<Corso> btnCombo;
 
     @FXML
     private Button btnCercaIscrittiCorso;
@@ -55,16 +58,48 @@ public class FXMLController {
 
     @FXML
     void doCercaCorsi(ActionEvent event) {
-
+    	txtResult.clear();
+    	txtNome.clear();
+    	txtCognome.clear();
+    	
+    	String string = txtMatricola.getText();
+    	Integer matricola;
+    	
+    	try {
+    		matricola = Integer.parseInt(string);
+    	}catch(NumberFormatException ne) {
+    		txtResult.setText("Inserire solo valori numerici!");
+    		return;
+    	}
+    	
+    	Studente studente = model.getStudenteFromMatricola(matricola);
+    	if(studente == null) {
+    		txtResult.setText("Matricola non presente nel database!");
+    		return;	
+    	}
+    	
+    	List<Corso> corsi = model.getCorsiFromMatricola(matricola);
+    		
+   		StringBuilder sb = new StringBuilder();
+		for(Corso c : corsi) {
+			sb.append(String.format("%-11s ", c.getCodins()));
+			sb.append(String.format("%-11d ", c.getNumeroCrediti()));
+			sb.append(String.format("%-50s ", c.getNome()));
+			sb.append(String.format("%-11d\n", c.getPeriodoDidattico()));
+		}
+		txtResult.appendText(sb.toString());
     }
 
     @FXML
     void doCercaIscrittiCorso(ActionEvent event) {
+    	txtResult.clear();
+    	txtNome.clear();
+    	txtCognome.clear();
+    	
     	try{
     		String codice = model.getCodiceByNomecorso(btnCombo.getValue().toString());
     	
     		try {
-    			txtResult.setStyle("-fx-font-family: monospace");
     			StringBuilder sb = new StringBuilder();
     			for(Studente s : this.model.getStudentiIscrittiAlCorso(codice)) {
     				sb.append(String.format("%-12d", s.getMatricola()));
@@ -87,14 +122,14 @@ public class FXMLController {
     @FXML
     void doCompletamentoAutomatico(ActionEvent event) {
     	txtResult.clear();
+    	txtNome.clear();
+    	txtCognome.clear();
     	
     	String string = txtMatricola.getText();
     	Integer matricola;
+    	
     	try {
     		matricola = Integer.parseInt(string);
-    	}catch(NullPointerException npe) {
-    		txtResult.setText("Inserire matricola!");
-    		return;
     	}catch(NumberFormatException ne) {
     		txtResult.setText("Inserire solo valori numerici!");
     		return;
@@ -143,10 +178,11 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		txtResult.setStyle("-fx-font-family: monospace");
 		
-		this.btnCombo.getItems().add(null);
-		for(Corso c : this.model.getTuttiICorsi()) {
-			this.btnCombo.getItems().add(c.getNome());
-		}
+		corsi = this.model.getTuttiICorsi();
+		Collections.sort(corsi);
+		btnCombo.getItems().addAll(corsi);
+		
 	}
 }

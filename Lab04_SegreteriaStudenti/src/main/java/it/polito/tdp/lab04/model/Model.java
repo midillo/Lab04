@@ -22,6 +22,7 @@ public class Model {
 	public List<Studente> getStudentiIscrittiAlCorso(String codice){
 		return corsoDao.getStudentiIscrittiAlCorso(codice);
 	}
+	
 	public List<Corso> getTuttiICorsi() {
 		return corsoDao.getTuttiICorsi();
 	}
@@ -36,5 +37,9 @@ public class Model {
 	
 	public String getCodiceByNomecorso(String nome) {
 		return corsoDao.getCodiceByNomecorso(nome);
+	}
+	
+	public List<Corso> getCorsiFromMatricola(int matricola){
+		return studenteDao.getCorsiFromMatricola(new Studente(matricola, null, null, null));
 	}
 }

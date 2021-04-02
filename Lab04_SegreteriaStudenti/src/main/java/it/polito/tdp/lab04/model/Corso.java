@@ -1,11 +1,15 @@
 package it.polito.tdp.lab04.model;
 
-public class Corso {
+public class Corso implements Comparable<Corso>{
 	
-	String codins;
-	int numeroCrediti;
-	String nome;
-	int periodoDidattico;
+	private String codins;
+	private int numeroCrediti;
+	private String nome;
+	private int periodoDidattico;
+	
+	public Corso(String codins) {
+			this.codins = codins;
+	}
 	
 	public Corso(String codins, int numeroCrediti, String nome, int periodoDidattico) {
 		super();
@@ -51,10 +55,7 @@ public class Corso {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codins == null) ? 0 : codins.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + numeroCrediti;
-		result = prime * result + periodoDidattico;
 		return result;
 	}
 
@@ -67,23 +68,22 @@ public class Corso {
 		if (getClass() != obj.getClass())
 			return false;
 		Corso other = (Corso) obj;
-		if (codins == null) {
-			if (other.codins != null)
-				return false;
-		} else if (!codins.equals(other.codins))
-			return false;
 		if (nome == null) {
 			if (other.nome != null)
 				return false;
 		} else if (!nome.equals(other.nome))
 			return false;
-		if (numeroCrediti != other.numeroCrediti)
-			return false;
-		if (periodoDidattico != other.periodoDidattico)
-			return false;
 		return true;
 	}
-
 	
+	@Override
+	public int compareTo(Corso corsoInput) {
+		return this.nome.compareTo(corsoInput.nome);
+	}
+
+	@Override
+	public String toString() {
+		return nome;
+	}
 
 }
